@@ -6,6 +6,7 @@
 
     <!-- External CSS -->
     <link rel="stylesheet" href="/vendor/normalize-4.1.1.css" type="text/css" />
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.5.0/css/all.css" integrity="sha384-B4dIYHKNBt8Bc12p+WXckhzcICo0wtJAoU8YZTY5qE0Id1GSseTk6S+L3BlXeVIU" crossorigin="anonymous">
 
     <!-- Google Font -->
     <link href="https://fonts.googleapis.com/css?family=Roboto+Condensed:300,300i,700,700i" rel="stylesheet">
@@ -14,12 +15,14 @@
     <link rel="stylesheet" href="/styles/layout.css" type="text/css" />
     <link rel="stylesheet" href="/styles/nav.css" type="text/css" />
     <link rel="stylesheet" href="/styles/new-tweet.css" />
+    <link rel="stylesheet" href="/styles/tweets.css" />
 
     <!-- External JS -->
     <script type="text/javascript" src="/vendor/jquery-2.2.3.min.js"></script>
 
     <!-- App JS -->
     <script type="text/javascript" src="/scripts/app.js"></script>
+    <script type="text/javascript" src="/scripts/composer-char-counter.js"></script>
   </head>
 
   <body>
@@ -40,6 +43,28 @@
             <span class="counter">140</span>
           </form>
         </section>
+
+        <div class="tweet-container">
+          <article class="tweet">
+            <header>
+              <img class="avatar fades" src="/images/avatar.png">
+              <h2 class="displayname fades">Newton</h2>
+              <span class="handle fades">@newton</span>
+            </header>
+            <div class="tweet-body">
+              <p>Little tweet here!</p>
+            </div>
+            <footer>
+              <p>10 days ago</p>
+              <div class="icon-container">
+                <i class="far fa-flag"></i>
+                <i class="fas fa-retweet"></i>
+                <i class="far fa-heart"></i>
+              </div>
+            </footer>
+          </article>
+        </div>
+
     </main>
 
   </body>

@@ -1,0 +1,85 @@
+article.tweet {
+  margin: 2em;
+  border-radius: 5px;
+  border: lightgray solid 1px;
+}
+
+article.tweet header{
+  display: flex;
+  align-items: flex-start;
+  justify-content: flex-start;
+  padding: 0.5em;
+  background-color: #eee;
+  border-top-right-radius: 5px;
+  border-top-left-radius: 5px;
+}
+
+article.tweet img.avatar {
+  display: inline-block;
+  width: 50px;
+  height: 50px;
+  border-radius: 10px;
+}
+
+article.tweet h2.displayname {
+  display: inline-block;
+
+  margin: 0px;
+  margin-left: 10px;
+}
+
+article.tweet span.handle {
+  margin-right: 0px;
+  margin-left: auto;
+  line-height: 50px;
+}
+
+div.tweet-body {
+  padding: 1.0em 1.0em;
+  background-color: #FFFFFF;
+  border-bottom: lightgray solid thin;
+}
+
+div.tweet-body p {
+  font-size: 1.5em;
+}
+
+article.tweet footer {
+  display: flex;
+  align-items: flex-start;
+  padding: 0 0.5em;
+  background-color: #FFFFFF;
+  border-bottom-left-radius: 5px;
+  border-bottom-right-radius: 5px;
+}
+
+article.tweet footer p {
+  display: inline-block;
+  margin-top: 0.6em;
+  margin-bottom: 0.6em;
+}
+
+div.icon-container {
+  display: inline-block;
+  margin-right: 0px;
+  margin-left: auto;
+  line-height: 2.5em;
+  opacity: 0.0;
+  color: cadetblue;
+}
+
+article.tweet .fades {
+  opacity: 0.5;
+}
+
+article.tweet:hover div.icon-container {
+  opacity: 1.0;
+}
+
+article.tweet:hover .fades {
+  opacity: 1.0;
+}
+
+article.tweet:hover {
+  border-color: black;
+}
