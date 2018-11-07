@@ -1,4 +1,5 @@
 function renderTweets(tweets, $container) {
+  $tweetContainer.empty();
   tweets.forEach((tweet) => {
       const daysSinceTweet = Math.floor((Date.now() - tweet.created_at) / 86400000);
       $container.prepend($('<article>', {'class': 'tweet'})
@@ -19,6 +20,12 @@ function renderTweets(tweets, $container) {
 
 $(document).ready(function() {
   $tweetContainer = $('div.tweet-container');
+  let newTweetVisibile = false;
+
+  $('#compose-button').on('click', function(event) {
+    event.preventDefault();
+    $('.new-tweet').slideToggle('slow');
+  });
 
   $('.new-tweet form').submit(function(event) {
     event.preventDefault();
@@ -46,7 +53,6 @@ $(document).ready(function() {
       url: "http://localhost:8080/tweets",
       type: "GET",
       success: function(data) {
-        $tweetContainer.empty();
         renderTweets(data, $tweetContainer);
       },
     });

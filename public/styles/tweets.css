@@ -42,6 +42,7 @@ div.tweet-body {
 
 div.tweet-body p {
   font-size: 1.5em;
+  word-break: break-word;
 }
 
 article.tweet footer {
