@@ -22,6 +22,7 @@
 
 #nav-bar form {
   float: right;
+  margin-bottom: 5px;
 }
 
 #nav-bar #compose-button {
@@ -32,4 +33,8 @@
   border: black solid thin;
   border-radius: 5px;
   font-size: 1.5em;
+}
+
+#nav-bar #compose-button:hover {
+  background-color: #FFFFFF;
 }

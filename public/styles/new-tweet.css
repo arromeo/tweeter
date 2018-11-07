@@ -28,3 +28,22 @@
 .new-tweet .counter.overflow {
   color: red;
 }
+
+.new-tweet-container div.error-box {
+  display: none;
+  margin: 0px;
+  padding-left: 10px;
+  border-radius: 5px;
+  background-color: tomato;
+  height: 20px;
+}
+
+div.error-box p {
+  margin: 0px;
+  width: 100%;
+  color: #FFFFFF;
+}
+
+div.error-box-container {
+  padding: 10px 0px;
+}

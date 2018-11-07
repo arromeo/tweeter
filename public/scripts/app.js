@@ -25,16 +25,18 @@ $(document).ready(function() {
   $('#compose-button').on('click', function(event) {
     event.preventDefault();
     $('.new-tweet').slideToggle('slow');
+    $('textarea[name=text]').focus();
   });
 
   $('.new-tweet form').submit(function(event) {
     event.preventDefault();
     let entry = $(this)[0][0].value;
     if (entry === '' || entry === null) {
-      alert('Form left blank');
+      populateError('Form left blank');
     } else if (entry.length > 140) {
-      alert('Message too long');
+      populateError('Message too long');
     } else {
+      clearError();
       $.ajax({
         url: "http://localhost:8080/tweets",
         type: "POST",
@@ -48,7 +50,17 @@ $(document).ready(function() {
     }
   });
 
-  function loadTweets () {
+  function populateError(message) {
+    $('.error-box p').text(message);
+    $('.error-box').slideDown('slow');
+  }
+
+  function clearError() {
+    $('.error-box p').text('');
+    $('.error-box').slideUp('slow');
+  }
+
+  function loadTweets() {
     $.ajax({
       url: "http://localhost:8080/tweets",
       type: "GET",
