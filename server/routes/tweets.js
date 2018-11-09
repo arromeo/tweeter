@@ -8,11 +8,20 @@ const tweetsRoutes  = express.Router();
 module.exports = function(DataHelpers) {
 
   tweetsRoutes.get("/", function(req, res) {
+
+    let isLoggedIn = false;
+
+    if (req.session.user_id === null) {
+      isLoggedIn = false;
+    } else {
+      isLoggedIn = true;
+    }
+
     DataHelpers.getTweets((err, tweets) => {
       if (err) {
         res.status(500).json({ error: err.message });
       } else {
-        res.json(tweets);
+        res.json({'tweets': tweets, 'isLoggedIn': isLoggedIn});
       }
     });
   });

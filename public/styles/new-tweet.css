@@ -38,6 +38,79 @@
   height: 20px;
 }
 
+.registration-container {
+  display: none;
+  background-color: #eee;
+  margin: 2em;
+  padding: 10px 0.5em;
+  border: lightgrey solid 1px;
+  border-radius: 5px;
+}
+
+.registration-text {
+  display: block;
+  font-size: 20px;
+  padding-bottom: 2px;
+  border-bottom: black solid thin;
+}
+
+.registration-form {
+  display: flex;
+  flex-direction: column;
+  margin: 5px 0px;
+}
+
+.registration-form button {
+  margin-top: 10px;
+}
+
+.registration-error {
+  display: none;
+  margin: 0px;
+  padding-left: 10px;
+  border-radius: 5px;
+  background-color: tomato;
+  height: 20px;
+}
+
+.registration-form input {
+  width: 230px;
+}
+
+.login-container {
+  display: none;
+  background-color: #eee;
+  margin: 2em;
+  padding: 10px 0.5em;
+  border: lightgrey solid 1px;
+  border-radius: 5px;
+}
+
+.login-text {
+  display: block;
+  font-size: 20px;
+  padding-bottom: 2px;
+  border-bottom: black solid thin;
+}
+
+.login-form {
+  display: flex;
+  flex-direction: column;
+  margin: 5px 0px;
+}
+
+.login-form button {
+  margin-top: 10px;
+}
+
+.login-form input {
+  width: 280px;
+}
+
+.form-pair {
+  margin: 5px 0px 0px auto;
+}
+
 div.error-box p {
   margin: 0px;
   width: 100%;
@@ -46,4 +119,13 @@ div.error-box p {
 
 div.error-box-container {
   padding: 10px 0px;
+}
+
+.login-error {
+  display: none;
+  margin: 0px;
+  padding-left: 10px;
+  border-radius: 5px;
+  background-color: tomato;
+  height: 20px;
 }

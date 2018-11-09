@@ -31,17 +31,64 @@
     <nav id="nav-bar">
       <img class="logo" src="/images/bird.png">
       <span class="header">Tweeter</span>
-      <form method=GET>
-        <button id="compose-button" type="submit"><i class="far fa-edit"></i>Compose</button>
-      </form>
+      <div class="button-panel">
+          <button id="login-button">Login</button>
+          <button id="register-button">Register</button>
+      </div>
     </nav>
 
-    <!-- Page-specific (main) content here -->
+    <!-- Registration Form Container -->
     <main class="container">
+      <div class="registration-container">
+        <section class="registration-panel">
+          <span class="registration-text">Register New User</span>
+          <form class="registration-form" method="POST" action="/register">
+            <div class="form-pair">
+            <label>Username</label>
+            <input type="text" name="username">
+            </div>
+            <div class="form-pair">
+            <label>Email</label>
+            <input type="email" name="email">
+            </div>
+            <div class="form-pair">
+            <label>Password</label>
+            <input type="password" name="password">
+            </div>
+            <div class="form-pair">
+            <label>Confirm Password</label>
+            <input type="password" name="confirmPassword">
+            </div>
+            <button type="submit">submit</button> 
+          </form>
+          <div class="registration-error"></div>
+        </section>
+      </div>
+
+      <!-- Login Form Container-->
+      <div class="login-container">
+        <section class="login-panel">
+          <span class="login-text">Login</span>
+          <form class="login-form" method="POST" action="/login">
+            <div class="form-pair">
+                <label>Username</label>
+                <input type="text" name="username">
+            </div>
+            <div class="form-pair">
+                <label>Password</label>
+                <input type="password" name="password">
+            </div>
+            <button type="submit">submit</button>
+          </form>
+          <div class="login-error"></div>
+        </section>
+      </div>
+
+      <!-- New Tweet Container-->
       <div class="new-tweet-container">
         <section class="new-tweet">
           <h2>Compose Tweet</h2>
-          <form method="POST" action="/tweets">
+          <form method="POST" action="/tweet">
             <textarea name="text" placeholder="What are you humming about?"></textarea>
             <input type="submit" value="Tweet">
             <span class="counter">140</span>

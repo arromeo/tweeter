@@ -5,6 +5,7 @@
   background-color: #00a087;
   color: #e8fdff;
   padding: 0em 2em;
+  z-index: 1;
 }
 
 #nav-bar .logo {
@@ -20,12 +21,12 @@
   line-height: 80px;
 }
 
-#nav-bar form {
+#nav-bar .button-panel {
   float: right;
   margin-bottom: 5px;
 }
 
-#nav-bar #compose-button {
+.button-panel button {
   height: 60px;
   margin: 10px 0px;
   background-color: lightcyan;
@@ -35,6 +36,6 @@
   font-size: 1.5em;
 }
 
-#nav-bar #compose-button:hover {
+.button-panel button button:hover {
   background-color: #FFFFFF;
 }
