@@ -50,14 +50,6 @@ const db = MongoClient.connect(MONGODB_URI, (err, db) => {
     });
   });
 
-  app.get('/logged', (req, res) => {
-    if (req.session.user_id !== null) {
-      res.json({'message': `you are logged in as ${req.session.user_id}`});
-    } else {
-      res.json({'message': 'you are not logged in'});
-    }
-  });
-
   app.post('/logout', (req, res) => {
     req.session.user_id = null;
     res.json({'message': 'successful logout'});
@@ -160,6 +152,24 @@ const db = MongoClient.connect(MONGODB_URI, (err, db) => {
     } else {
       res.json({'err': 'not logged in'});
     }
+  });
+
+  app.get('/user/likes', (req, res) => {
+    if (req.session.user_id !== null) {
+      let o_id = mongo.ObjectID(req.session.user_id);
+      db.collection('users').find({'_id': o_id}).toArray((err, user) => {
+        if (err) {
+          return callback(err);
+        }
+        if (user[0].liked.includes(req.query.tweet_id)) {
+          res.json({'liked': true});
+        } else {
+          res.json({'liked': false});
+        }
+      });
+     } else {
+       res.json({'err': 'not logged in'});
+     }
   });
 
   app.listen(PORT, () => {
