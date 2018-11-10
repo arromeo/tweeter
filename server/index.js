@@ -10,6 +10,7 @@ const bcrypt        = require("bcryptjs");
 const app           = express();
 const cookieSession = require("cookie-session");
 const mongo         = require("mongodb");
+const md5           = require("md5");
 
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.static("public"));
@@ -76,12 +77,18 @@ const db = MongoClient.connect(MONGODB_URI, (err, db) => {
   
           if(emailResult.length === 0) {
             // Register new user.
+            const avatarUrlPrefix = `https://vanillicon.com/${md5(req.body.username)}`;
+
             let user = {
               username: req.body.username,
               email: req.body.email,
               password: bcrypt.hashSync(req.body.password, 10),
               displayName: req.body.username,
-              avatar: null,
+              avatar: {
+                small:   `${avatarUrlPrefix}_50.png`,
+                regular: `${avatarUrlPrefix}.png`,
+                large:   `${avatarUrlPrefix}_200.png`,
+              },
               liked: [],
             };
             db.collection('users').insertOne(user);
@@ -111,9 +118,9 @@ const db = MongoClient.connect(MONGODB_URI, (err, db) => {
           user: {
             "name": user.displayName,
             "avatars": {
-              "small": user.avatar,
-              "regular": user.avatar,
-              "large": user.avatar,
+              "small": user.avatar.small,
+              "regular": user.avatar.regular,
+              "large": user.avatar.large,
             },
             "handle": user.username,
           },
@@ -136,18 +143,25 @@ const db = MongoClient.connect(MONGODB_URI, (err, db) => {
       let o_id = mongo.ObjectID(req.session.user_id);
       let tweet_id = mongo.ObjectID(req.params.tweet_id);
       db.collection('users').find({_id: o_id}).toArray((err, userResult) => {
-        let user = userResult[0];
-        if (user.liked.includes(req.params.tweet_id)) {
-          let removeIndex = user.liked.indexOf(req.params.tweet_id);
-
-          user.liked.splice(removeIndex, 1);
-          db.collection('users').update({'_id': o_id}, {'$pull': {'liked': req.params.tweet_id}});
-          db.collection('tweets').update({'_id': tweet_id}, {'$inc': {'content.likes' : -1}});
-        } else {
-          db.collection('users').update({'_id': o_id}, {'$push': {'liked': req.params.tweet_id}});
-          db.collection('tweets').update({'_id': tweet_id}, {'$inc': {'content.likes' : 1 }});
+        if (err) {
+          return callback(err);
         }
-        res.json({'err': null, 'message': 'successful fav/unfav'});
+        if(userResult.length === 1) {
+          let user = userResult[0];
+          if (user.liked.includes(req.params.tweet_id)) {
+            let removeIndex = user.liked.indexOf(req.params.tweet_id);
+
+            user.liked.splice(removeIndex, 1);
+            db.collection('users').update({'_id': o_id}, {'$pull': {'liked': req.params.tweet_id}});
+            db.collection('tweets').update({'_id': tweet_id}, {'$inc': {'content.likes' : -1}});
+          } else {
+            db.collection('users').update({'_id': o_id}, {'$push': {'liked': req.params.tweet_id}});
+            db.collection('tweets').update({'_id': tweet_id}, {'$inc': {'content.likes' : 1 }});
+          }
+          res.json({'err': null, 'message': 'successful fav/unfav'});
+        } else {
+          res.json({'err': 'invalid user'});
+        }
       });
     } else {
       res.json({'err': 'not logged in'});
@@ -161,8 +175,12 @@ const db = MongoClient.connect(MONGODB_URI, (err, db) => {
         if (err) {
           return callback(err);
         }
-        if (user[0].liked.includes(req.query.tweet_id)) {
-          res.json({'liked': true});
+        if(user.length === 1) {
+          if (user[0].liked.includes(req.query.tweet_id)) {
+            res.json({'liked': true});
+          } else {
+            res.json({'liked': false});
+          }
         } else {
           res.json({'liked': false});
         }
