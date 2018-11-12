@@ -6,7 +6,11 @@ $(document).ready(function() {
 
   function renderTweets(tweets, $container) {
     $container.empty();
+    let $tweetObj = [];
+    let tweetCount = tweets.length;
+
     tweets.forEach((tweet) => {
+        $tweetObj.push({id: tweet._id, content: undefined});
         $.ajax({
           url: '/user/likes',
           type: 'GET',
@@ -15,11 +19,11 @@ $(document).ready(function() {
           success: (function(response) {
   
             let res = JSON.parse(response);
-  
             let likeClass = res.liked === true ? ' user-liked' : '';
-  
             let time = relativeTimeString(Math.floor((Date.now() - tweet.created_at)));
-            $container.prepend($('<article>', {'class': 'tweet'})
+
+
+            let result = ($('<article>', {'class': 'tweet'})
               .append($('<header>')
                   .append($('<img>', {'class': 'avatar fades', 'src': tweet.user.avatars.small}))
                   .append($('<h2>', {'class': 'displayname fades'}).text(tweet.user.name))
@@ -37,6 +41,21 @@ $(document).ready(function() {
                       .append($('<i>', {'class': `far fa-heart${likeClass}`, 'data-likes': tweet.content.likes, 'data-liked': res.liked })
                       .append($('<span>', {'class': 'fa-layers-text fa-inverse', 'data-fa-transoform':'shrink-11.5 rotate--30'})
                         .css({'font-weight': 900, 'color':'cadetblue'}).text(tweet.content.likes)))))));
+
+            $tweetObj.forEach((value, index) => {
+              if (value.id === tweet._id) {
+                $tweetObj[index].content = result;
+              }
+            });
+
+            tweetCount--;
+            console.log(tweetCount);
+            if (tweetCount === 0) {
+              console.log($tweetObj);
+              $tweetObj.forEach((element) => {
+                $container.prepend(element.content);
+              });
+            }
           }),
         });
     });
