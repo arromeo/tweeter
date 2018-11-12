@@ -186,7 +186,7 @@ const db = MongoClient.connect(MONGODB_URI, (err, db) => {
         }
       });
      } else {
-       res.json({'err': 'not logged in'});
+       res.json({'liked': false});
      }
   });
 

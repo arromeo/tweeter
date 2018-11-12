@@ -1,91 +1,93 @@
-function renderTweets(tweets, $container) {
-  $container.empty();
-  tweets.forEach((tweet) => {
-      $.ajax({
-        url: '/user/likes',
-        type: 'GET',
-        dataType: 'text',
-        data: `tweet_id=${tweet._id}`,
-        success: (function(response) {
 
-          let res = JSON.parse(response);
-
-          let likeClass = res.liked === true ? ' user-liked' : '';
-
-          let time = relativeTimeString(Math.floor((Date.now() - tweet.created_at)));
-          $container.prepend($('<article>', {'class': 'tweet'})
-            .append($('<header>')
-                .append($('<img>', {'class': 'avatar fades', 'src': tweet.user.avatars.small}))
-                .append($('<h2>', {'class': 'displayname fades'}).text(tweet.user.name))
-                .append($('<span>', {'class': 'handle fades'}).text(tweet.user.handle)))
-              .append($('<div>', {'class': 'tweet-body'})
-                .append($('<p>').text(tweet.content.text)))
-              .append($('<footer>')
-                .append($('<p>').text(time))
-                .append($('<div>', {'class': 'icon-container'})
-                  .append($('<span>', {'class': 'flag', 'data-tweetid': tweet._id})
-                    .append($('<i>', {'class': 'far fa-flag'})))
-                  .append($('<span>', {'class': 'retweet', 'data-tweetid': tweet._id})
-                    .append($('<i>', {'class': 'fas fa-retweet'})))
-                  .append($('<span>', {'class': 'favorite', 'data-tweetid': tweet._id})
-                    .append($('<i>', {'class': `far fa-heart${likeClass}`, 'data-likes': tweet.content.likes, 'data-liked': res.liked })
-                    .append($('<span>', {'class': 'fa-layers-text fa-inverse', 'data-fa-transoform':'shrink-11.5 rotate--30'})
-                      .css({'font-weight': 900, 'color':'cadetblue'}).text(tweet.content.likes)))))));
-        }),
-      });
-  });
-}
-
-
-// Creates a relative time string.
-
-function relativeTimeString(time) {
-  let number, unit;
-  if (time > 31540000000) {
-    number = Math.round(time / 31540000000);
-    unit = (number === 1) ? "year" : "years";
-    return `${number} ${unit} ago`
-  } else if (time > 2592000000) {
-    number = Math.round(time / 2592000000);
-    unit = (number === 1) ? "month" : "months";
-    return `${number} ${unit} ago`
-  } else if (time > 86400000) {
-    number = Math.round(time / 86400000);
-    unit = (number === 1) ? "day" : "days";
-    return `${number} ${unit} ago`
-  } else if (time > 3600000) {
-    number = Math.round(time / 3600000);
-    unit = (number === 1) ? "hour" : "hours"
-    return `${number} ${unit} ago`
-  } else if (time > 60000) {
-    number = Math.round(time / 60000);
-    unit = (number === 1) ? "minute" : "minutes"
-    return `${number} ${unit} ago`
-  } else {
-    return 'seconds ago'
-  }
-}
-
-// Button factory to populate the top bar.
-
-function renderButtons(types, $container) {
-  $container.empty();
-  types.forEach((type) => {
-    let display = type.charAt(0).toUpperCase() + type.slice(1);
-    if (type == 'compose') {
-      $container.append($('<button>', {'id': `${type}-button`, 'type': 'submit'})
-      .text(`${display}`));
-      $('#compose-button').html('<i class="far fa-edit"></i>Compose');
-    } else {
-      $container.append($('<button>', {'id': `${type}-button`, 'type': 'submit'})
-        .text(`${display}`));
-    }
-  });
-}
 
 $(document).ready(function() {
   $tweetContainer = $('div.tweet-container');
   $buttonContainer = $('.button-panel');
+
+  function renderTweets(tweets, $container) {
+    $container.empty();
+    tweets.forEach((tweet) => {
+        $.ajax({
+          url: '/user/likes',
+          type: 'GET',
+          dataType: 'text',
+          data: `tweet_id=${tweet._id}`,
+          success: (function(response) {
+  
+            let res = JSON.parse(response);
+  
+            let likeClass = res.liked === true ? ' user-liked' : '';
+  
+            let time = relativeTimeString(Math.floor((Date.now() - tweet.created_at)));
+            $container.prepend($('<article>', {'class': 'tweet'})
+              .append($('<header>')
+                  .append($('<img>', {'class': 'avatar fades', 'src': tweet.user.avatars.small}))
+                  .append($('<h2>', {'class': 'displayname fades'}).text(tweet.user.name))
+                  .append($('<span>', {'class': 'handle fades'}).text(tweet.user.handle)))
+                .append($('<div>', {'class': 'tweet-body'})
+                  .append($('<p>').text(tweet.content.text)))
+                .append($('<footer>')
+                  .append($('<p>').text(time))
+                  .append($('<div>', {'class': 'icon-container'})
+                    .append($('<span>', {'class': 'flag', 'data-tweetid': tweet._id})
+                      .append($('<i>', {'class': 'far fa-flag'})))
+                    .append($('<span>', {'class': 'retweet', 'data-tweetid': tweet._id})
+                      .append($('<i>', {'class': 'fas fa-retweet'})))
+                    .append($('<span>', {'class': 'favorite', 'data-tweetid': tweet._id})
+                      .append($('<i>', {'class': `far fa-heart${likeClass}`, 'data-likes': tweet.content.likes, 'data-liked': res.liked })
+                      .append($('<span>', {'class': 'fa-layers-text fa-inverse', 'data-fa-transoform':'shrink-11.5 rotate--30'})
+                        .css({'font-weight': 900, 'color':'cadetblue'}).text(tweet.content.likes)))))));
+          }),
+        });
+    });
+  }
+  
+  
+  // Creates a relative time string.
+  
+  function relativeTimeString(time) {
+    let number, unit;
+    if (time > 31540000000) {
+      number = Math.round(time / 31540000000);
+      unit = (number === 1) ? "year" : "years";
+      return `${number} ${unit} ago`
+    } else if (time > 2592000000) {
+      number = Math.round(time / 2592000000);
+      unit = (number === 1) ? "month" : "months";
+      return `${number} ${unit} ago`
+    } else if (time > 86400000) {
+      number = Math.round(time / 86400000);
+      unit = (number === 1) ? "day" : "days";
+      return `${number} ${unit} ago`
+    } else if (time > 3600000) {
+      number = Math.round(time / 3600000);
+      unit = (number === 1) ? "hour" : "hours"
+      return `${number} ${unit} ago`
+    } else if (time > 60000) {
+      number = Math.round(time / 60000);
+      unit = (number === 1) ? "minute" : "minutes"
+      return `${number} ${unit} ago`
+    } else {
+      return 'seconds ago'
+    }
+  }
+  
+  // Button factory to populate the top bar.
+  
+  function renderButtons(types, $container) {
+    $container.empty();
+    types.forEach((type) => {
+      let display = type.charAt(0).toUpperCase() + type.slice(1);
+      if (type == 'compose') {
+        $container.append($('<button>', {'id': `${type}-button`, 'type': 'submit'})
+        .text(`${display}`));
+        $('#compose-button').html('<i class="far fa-edit"></i>Compose');
+      } else {
+        $container.append($('<button>', {'id': `${type}-button`, 'type': 'submit'})
+          .text(`${display}`));
+      }
+    });
+  }
 
   $('.button-panel').on('click', '#login-button', function(event) {
     event.preventDefault();
