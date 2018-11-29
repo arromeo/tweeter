@@ -5,6 +5,7 @@ const tweetsRoutes  = express.Router();
 
 module.exports = function(DataHelpers) {
 
+  // Endpoint to call the helper function that returns a list of tweets.
   tweetsRoutes.get("/", function(req, res) {
 
     let isLoggedIn = false;
@@ -24,28 +25,32 @@ module.exports = function(DataHelpers) {
     });
   });
 
-  tweetsRoutes.post("/", function(req, res) {
-    // if (!req.body.text) {
-    //   res.status(400).json({ error: 'invalid request: no data in POST body'});
-    //   return;
-    // }
+  tweetsRoutes.post('/', (req, res) => {
+    if (req.session.user_id !== null) {
+      DataHelpers.saveTweet(req.session.user_id, req.body.text, (err, result) => {
+        if (err) {
+          res.json({'message': err});
+        } else {
+          res.json({'message': result});
+        }
+      });
+    } else {
+      res.json({'message': 'not logged in'});
+    }
+  });
 
-    // const user = req.body.user ? req.body.user : userHelper.generateRandomUser();
-    // const tweet = {
-    //   user: user,
-    //   content: {
-    //     text: req.body.text
-    //   },
-    //   created_at: Date.now()
-    // };
-
-    // DataHelpers.saveTweet(tweet, (err) => {
-    //   if (err) {
-    //     res.status(500).json({ error: err.message });
-    //   } else {
-    //     res.status(201).send();
-    //   }
-    // });
+  tweetsRoutes.post('/:tweet_id', (req, res) => {
+    if (req.session.user_id !== null) {
+      DataHelpers.toggleTweetLike(req.session.user_id, req.params.tweet_id, (err, result) => {
+        if (err) {
+          res.json({'message': err});
+        } else {
+          res.json({'message': result});
+        }
+      });
+    } else {
+      res.json({'err': 'not logged in'});
+    }
   });
 
   return tweetsRoutes;

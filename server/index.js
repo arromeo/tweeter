@@ -109,65 +109,6 @@ const db = MongoClient.connect(MONGODB_URI, (err, db) => {
     });
   });
 
-  app.post('/tweet', (req, res) => {
-    if (req.session.user_id !== null) {
-      let o_id = mongo.ObjectID(req.session.user_id);
-      db.collection('users').find({_id: o_id}).toArray((err, userResult) => {
-        let user = userResult[0];
-        let newTweet = {
-          user: {
-            "name": user.displayName,
-            "avatars": {
-              "small": user.avatar.small,
-              "regular": user.avatar.regular,
-              "large": user.avatar.large,
-            },
-            "handle": user.username,
-          },
-          "content": {
-            "text": req.body.text,
-            "likes": 0,
-          },
-          "created_at": Date.now(),
-        }
-        db.collection('tweets').insert(newTweet);
-        res.json({'message': 'successful post'});
-      });
-    } else {
-      res.json({'message': 'not logged in'});
-    }
-  });
-
-  app.post('/tweet/:tweet_id', (req, res) => {
-    if (req.session.user_id !== null) {
-      let o_id = mongo.ObjectID(req.session.user_id);
-      let tweet_id = mongo.ObjectID(req.params.tweet_id);
-      db.collection('users').find({_id: o_id}).toArray((err, userResult) => {
-        if (err) {
-          return callback(err);
-        }
-        if(userResult.length === 1) {
-          let user = userResult[0];
-          if (user.liked.includes(req.params.tweet_id)) {
-            let removeIndex = user.liked.indexOf(req.params.tweet_id);
-
-            user.liked.splice(removeIndex, 1);
-            db.collection('users').update({'_id': o_id}, {'$pull': {'liked': req.params.tweet_id}});
-            db.collection('tweets').update({'_id': tweet_id}, {'$inc': {'content.likes' : -1}});
-          } else {
-            db.collection('users').update({'_id': o_id}, {'$push': {'liked': req.params.tweet_id}});
-            db.collection('tweets').update({'_id': tweet_id}, {'$inc': {'content.likes' : 1 }});
-          }
-          res.json({'err': null, 'message': 'successful fav/unfav'});
-        } else {
-          res.json({'err': 'invalid user'});
-        }
-      });
-    } else {
-      res.json({'err': 'not logged in'});
-    }
-  });
-
   app.get('/user/likes', (req, res) => {
     if (req.session.user_id !== null) {
       let o_id = mongo.ObjectID(req.session.user_id);

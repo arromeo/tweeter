@@ -1,8 +1,9 @@
 
 
 $(document).ready(function() {
-  $tweetContainer = $('div.tweet-container');
-  $buttonContainer = $('.button-panel');
+  let $tweetContainer = $('div.tweet-container');
+  let $buttonContainer = $('.button-panel');
+  // let isLoggedIn = unknown;
 
   function renderTweets(tweets, $container) {
     $container.empty();
@@ -49,9 +50,7 @@ $(document).ready(function() {
             });
 
             tweetCount--;
-            console.log(tweetCount);
             if (tweetCount === 0) {
-              console.log($tweetObj);
               $tweetObj.forEach((element) => {
                 $container.prepend(element.content);
               });
@@ -60,7 +59,6 @@ $(document).ready(function() {
         });
     });
   }
-  
   
   // Creates a relative time string.
   
@@ -108,24 +106,32 @@ $(document).ready(function() {
     });
   }
 
+  /**
+   *  BUTTON EVENTS
+   */
+
+   // Slide down the login pane and slide up registration pane.
   $('.button-panel').on('click', '#login-button', function(event) {
     event.preventDefault();
     $('.registration-container').slideUp('slow');
     $('.login-container').slideToggle('slow');
   });
 
+  // Slide down the registration pane and slide up the login pane.
   $('.button-panel').on('click', '#register-button', function(event) {
     event.preventDefault();
     $('.login-container').slideUp('slow');
     $('.registration-container').slideToggle('slow');
   });
 
+  // Slide down the new tweet form.
   $('.button-panel').on('click', '#compose-button', function(event) {
     event.preventDefault();
     $('.new-tweet').slideToggle('slow');
     $('textarea[name=text]').focus();
   });
 
+  // Send a logout request to the server.
   $('.button-panel').on('click', '#logout-button', function(event) {
     event.preventDefault();
     $.ajax({
@@ -137,22 +143,16 @@ $(document).ready(function() {
     renderButtons(['login', 'register'], $buttonContainer);
   });
 
+
   $('.tweet-container').on('click', '.flag', function(event) {
-    tweetId = $(event.currentTarget).data('tweetid');
-    $.ajax({
-      url: `/tweet/${tweetId}`,
-      type: 'POST',
-      success: (function(response) {
-        console.log(response.message);
-      }),
-    });
   });
 
   $('.tweet-container').on('click', '.retweet', function(event) {
-
   });
 
   $('.tweet-container').on('click', '.favorite', function(event) {
+    // Retrieves the current number of likes and updates the front end based on
+    // whether the tweet was already liked.
     let value = Number($(event.target).attr('data-likes'));
 
     if ($(event.target).attr('data-liked') === "true") {
@@ -167,19 +167,22 @@ $(document).ready(function() {
       $(event.target).addClass('user-liked').text(value);
     }
 
+    // After updating the front end, the change is sent to the server.
     tweetId = $(event.currentTarget).attr('data-tweetid');
     $.ajax({
-      url: `/tweet/${tweetId}`,
+      url: `/tweets/${tweetId}`,
       type: 'POST',
       success: (function(response) {
       })
     });
   });
 
+  // Run when user tries to login.
   $('.login-form').submit(function(event) {
     event.preventDefault();
-    let username = $(this)[0][0].value;
-    let password = $(this)[0][1].value;
+
+    let username = $(this)[0][0].value; // Username from the form data.
+    let password = $(this)[0][1].value; // Password from the form data.
     if (username.length !== 0 && password.length !== 0) {
       $.ajax({
         url: '/login',
@@ -204,14 +207,17 @@ $(document).ready(function() {
     }
   });
 
+  // Run when user tries to submit a registration form.
   $('.registration-form').submit(function(event) {
     event.preventDefault();
-    let confirmPassword = $(this)[0][3].value;
+    let confirmPassword = $(this)[0][3].value; //Retyped password to confirm.
     const user = {
-      username: $(this)[0][1].value,
-      email: $(this)[0][1].value,
-      password: $(this)[0][2].value,
+      username: $(this)[0][1].value, // Username from the form data.
+      email: $(this)[0][1].value, // Email from the form data.
+      password: $(this)[0][2].value, // Password from the form data.
     }
+
+    // Checks if any fields are left blank before sending off to the server.
     if (user.username.length === 0 ||
       user.email.length === 0 ||
       user.password.length === 0 ||
@@ -243,9 +249,13 @@ $(document).ready(function() {
       }
   });
 
+  // Run when the user attempts to submit a new tweet.
   $('.new-tweet form').submit(function(event) {
     event.preventDefault();
-    let entry = $(this)[0][0].value;
+    let entry = $(this)[0][0].value; // Text of new tweet.
+
+    // Make sure the tweet has content in it before sending it off to the
+    // server.
     if (entry === '' || entry === null) {
       populateError('Form left blank');
     } else if (entry.length > 140) {
@@ -253,7 +263,7 @@ $(document).ready(function() {
     } else {
       clearError();
       $.ajax({
-        url: "http://localhost:8080/tweet",
+        url: "http://localhost:8080/tweets",
         type: "POST",
         data: $(this).serialize(),
         success: (function() {
@@ -265,16 +275,21 @@ $(document).ready(function() {
     }
   });
 
+  // Fills the new tweet error message.
+  // TODO: Refactor this to be more descriptive. There are several types of
+  //       error messages but this one has a very general title.
   function populateError(message) {
     $('.error-box p').text(message);
     $('.error-box').slideDown('slow');
   }
 
+  // When the correct input is provided, clear the error text and collapse.
   function clearError() {
     $('.error-box p').text('');
     $('.error-box').slideUp('slow');
   }
 
+  // Request a list of tweets to render from the server.
   function loadTweets() {
     $.ajax({
       url: "http://localhost:8080/tweets",
@@ -282,6 +297,7 @@ $(document).ready(function() {
       success: function(data) {
         renderTweets(data.tweets , $tweetContainer);
 
+        // If the user has an active cookie session, render correct buttons.
         if (data.isLoggedIn === true) {
           renderButtons(['compose', 'logout'], $buttonContainer);
         } else {
@@ -291,6 +307,7 @@ $(document).ready(function() {
     });
   }
 
+  // Simulates an empty key press to reset the character counter.  
   function resetCharCounter() {
     var e = jQuery.Event("keyup");
     e.which = 50;
